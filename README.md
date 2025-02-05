@@ -34,7 +34,7 @@ This example demonstrates how to use the **Sensirion SCD30** CO₂ sensor with *
 
 | SCD30 Pin | ESP32 Pin  | Description             |
 | --------- | ---------- | ----------------------- |
-| **VCC**   | **3.3V**   | Power supply (3.3V)    |
+| **VCC**   | **VINV**   | Power supply (5V)    |
 | **GND**   | **GND**    | Ground                  |
 | **SDA**   | **GPIO21** | I2C Data                |
 | **SCL**   | **GPIO22** | I2C Clock               |
