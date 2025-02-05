@@ -108,7 +108,7 @@ esp_err_t sensirion_i2c_delayed_read_cmd(i2c_master_dev_handle_t SCD30_handle, u
     uint8_t buf[SENSIRION_COMMAND_SIZE];
 
     sensirion_fill_cmd_send_buf(buf, cmd, NULL, 0);
-    ret = i2c_master_transmit(SCD30_handle, buf, SENSIRION_COMMAND_SIZE,-1);
+    ret = i2c_master_transmit(SCD30_handle, buf, SENSIRION_COMMAND_SIZE,portMAX_DELAY);
     if (ret != ESP_OK)
        { return ret;}
 
@@ -117,7 +117,7 @@ esp_err_t sensirion_i2c_delayed_read_cmd(i2c_master_dev_handle_t SCD30_handle, u
     {
         vTaskDelay(pdMS_TO_TICKS(delay_us / 1000));
     }
-    return i2c_master_receive(SCD30_handle, data_words, num_words,-1);
+    return i2c_master_receive(SCD30_handle, (uint8_t*)data_words, num_words * SENSIRION_WORD_SIZE, portMAX_DELAY);
 }
 /*
 esp_err_t sensirion_i2c_delayed_read_cmd(i2c_master_dev_handle_t SCD30_handle, uint16_t cmd,
@@ -164,14 +164,14 @@ esp_err_t sensirion_i2c_write_cmd_with_args(i2c_master_dev_handle_t SCD30_handle
     uint8_t buf[SENSIRION_MAX_BUFFER_WORDS];
     uint16_t buf_size;
     buf_size = sensirion_fill_cmd_send_buf(buf, command, data_words, num_words);
-    return i2c_master_transmit(SCD30_handle, buf, buf_size,-1);
+    return i2c_master_transmit(SCD30_handle, buf, buf_size, portMAX_DELAY);
 }
 
 esp_err_t sensirion_i2c_write_cmd(i2c_master_dev_handle_t SCD30_handle, uint16_t command) {
     uint8_t buf[SENSIRION_COMMAND_SIZE];
 
     sensirion_fill_cmd_send_buf(buf, command, NULL, 0);
-    return i2c_master_transmit(SCD30_handle, buf, SENSIRION_COMMAND_SIZE,-1);
+    return i2c_master_transmit(SCD30_handle, buf, SENSIRION_COMMAND_SIZE,portMAX_DELAY);
 }
 esp_err_t sensirion_i2c_read_words_as_bytes(i2c_master_dev_handle_t SCD30_handle, uint8_t* data,
                                           uint16_t num_words) {
@@ -181,7 +181,7 @@ esp_err_t sensirion_i2c_read_words_as_bytes(i2c_master_dev_handle_t SCD30_handle
     uint16_t word_buf[SENSIRION_MAX_BUFFER_WORDS];
     uint8_t* const buf8 = (uint8_t*)word_buf;
 
-    ret = i2c_master_receive(SCD30_handle, buf8, size,-1);
+    ret = i2c_master_receive(SCD30_handle, buf8, size,portMAX_DELAY);
     if (ret != ESP_OK)
         {return ret;}
 
